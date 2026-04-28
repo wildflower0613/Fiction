@@ -66,12 +66,7 @@ while current_url:
         safetitle = re.sub(r'[^\w\-]', '_', title)
         price = book.find('p', class_='price_color').get_text()
 
-        book_dict = dict(extrbook_data(book_url))
-        book_dict["title"] = title
-        book_dict["rating"] = rating
-        book_dict["description"] = proddescript
-        headers = list(book_dict.keys())
-        row = list(book_dict.values())
+
 
 
 
@@ -83,10 +78,16 @@ while current_url:
     for book in books:
         relative_url = book.a["href"]
         book_url = urljoin(current_url, relative_url)
+        book_dict = dict(extrbook_data(book_url))
+        book_dict["title"] = title
+        book_dict["rating"] = rating
+        book_dict["description"] = proddescript
+        headers = list(book_dict.keys())
+        row = list(book_dict.values())
         headers = list(book_dict.keys())
         row = list(book_dict.values())
 
-    with open('travel_books.csv', 'a', newline='') as csvfile:
+    with open('fiction_books.csv', 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
         if write_header == True:
             writer.writerow(headers)
@@ -107,6 +108,11 @@ while current_url:
     else:
     # No "Next" button found, end the loop
         current_url = None
+
+
+
+
+
 
 
 

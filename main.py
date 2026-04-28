@@ -40,6 +40,7 @@ while current_url:
     response = requests.get(current_url)
     soup = BeautifulSoup(response.text, "html.parser")
     books = soup.find_all("article", class_="product_pod")
+    write_header = True
 
 
     def extrbook_data(book_url: str) -> dict:
@@ -64,7 +65,14 @@ while current_url:
         title = (book.h3.a['title'])
         safetitle = re.sub(r'[^\w\-]', '_', title)
         price = book.find('p', class_='price_color').get_text()
-        print(dict)
+
+        book_dict = dict(extrbook_data(book_url))
+        book_dict["title"] = title
+        book_dict["rating"] = rating
+        book_dict["description"] = proddescript
+        headers = list(book_dict.keys())
+        row = list(book_dict.values())
+
 
 
 
@@ -75,9 +83,18 @@ while current_url:
     for book in books:
         relative_url = book.a["href"]
         book_url = urljoin(current_url, relative_url)
-        book_dict = extrbook_data(book_url)
-        headers = book_dict.keys()
-        row= book_dict.values()
+        headers = list(book_dict.keys())
+        row = list(book_dict.values())
+
+    with open('travel_books.csv', 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        if write_header == True:
+            writer.writerow(headers)
+            write_header = False
+        writer.writerow(row)
+
+
+
 
 
     # Find the "Next" button
